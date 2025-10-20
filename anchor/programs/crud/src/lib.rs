@@ -18,7 +18,7 @@ pub mod crud {
 #[derive(Accounts)]
 pub struct CreateEntity<'info>{
     pub owner:Signer<'info>,
-
+    pub system_program:Program<'info,System>
 }
 
 #[account]
