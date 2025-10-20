@@ -25,6 +25,9 @@ pub mod crud {
         Ok(())
     }
 
+    pub fn delete_journal_entity(ctx:Context<UpdataEntity>,_title:String) -> Result<()>{
+        Ok(())
+    }
 
 }
 
@@ -55,6 +58,20 @@ pub  struct UpdataEntity<'info>{
         realloc =  8+JournalEntityState::INIT_SPACE,
         realloc::zero = true,
         realloc::payer = owner,
+    )]
+    pub journal_entity:Account<'info,JournalEntityState>,
+    #[account(mut)]
+    pub owner:Signer<'info>,
+    pub system_program:Program<'info,System>,
+}
+#[derive(Accounts)]
+#[instruction(title:String)]
+pub  struct DeleteEntity<'info>{
+    #[account(
+        mut,
+        seeds = [title.as_bytes(),owner.key().as_ref()],
+        bump,
+       close=owner
     )]
     pub journal_entity:Account<'info,JournalEntityState>,
     #[account(mut)]
