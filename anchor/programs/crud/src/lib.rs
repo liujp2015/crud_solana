@@ -17,6 +17,14 @@ pub mod crud {
         Ok(())
     }
 
+    pub fn update_journal_entity(ctx:Context<UpdataEntity>,_title:String,message:String) -> Result<()>{
+        let journal_entity = &mut ctx.accounts.journal_entity; 
+        journal_entity.message = message;
+       
+
+        Ok(())
+    }
+
 
 }
 
@@ -30,6 +38,23 @@ pub struct CreateEntity<'info>{
     bump,
     space = 8+JournalEntityState::INIT_SPACE,
     payer = owner,
+    )]
+    pub journal_entity:Account<'info,JournalEntityState>,
+    #[account(mut)]
+    pub owner:Signer<'info>,
+    pub system_program:Program<'info,System>,
+}
+
+#[derive(Accounts)]
+#[instruction(title:String)]
+pub  struct UpdataEntity<'info>{
+    #[account(
+        mut,
+        seeds = [title.as_bytes(),owner.key().as_ref()],
+        bump,
+        realloc =  8+JournalEntityState::INIT_SPACE,
+        realloc::zero = true,
+        realloc::payer = owner,
     )]
     pub journal_entity:Account<'info,JournalEntityState>,
     #[account(mut)]
